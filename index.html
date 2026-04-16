@@ -231,7 +231,7 @@
 
 		.card-stage {
 			position: relative;
-			height: min(72vh, 650px);
+			height: min(85vh, 850px); /* 高度从 650px 加大到 850px，给长高后的图片腾出空间 */
 		}
 
 		.project-card {
@@ -246,6 +246,7 @@
 			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
 			opacity: 0;
 			transform: translateY(45px) scale(0.95);
+			overflow-y: auto; /* 新增加的自适应保险：文字太多时卡片内部可滚动，绝不刺穿边框 */
 		}
 
 		.project-card h3 {
