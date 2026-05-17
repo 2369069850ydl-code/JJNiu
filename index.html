@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta
 		name="description"
-		content="杨戴霖的个人主页，聚合新媒体运营项目、Vibe Coding 实验、生活方式记录与学习笔记。"
+		content="杨戴霖的个人主页"
 	/>
 	<title>杨戴霖 | 个人主页</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,6 +37,7 @@
 			--radius-xl: 24px;
 			--radius-lg: 18px;
 			--radius-md: 12px;
+			--card-media-ratio: 3 / 4;
 			--max: 1200px;
 		}
 
@@ -61,6 +62,14 @@
 			color: var(--text);
 			overflow-x: hidden;
 			letter-spacing: -0.01em;
+		}
+
+		body.media-1x1 {
+			--card-media-ratio: 1 / 1;
+		}
+
+		body.media-3x4 {
+			--card-media-ratio: 3 / 4;
 		}
 
 		a {
@@ -587,7 +596,7 @@
 		}
 
 		.project-card:not(.project-feature) .project-media-wrap {
-			min-height: 200px;
+			min-height: auto;
 			padding: 10px;
 		}
 
@@ -603,7 +612,7 @@
 		}
 
 		.project-feature .project-media-wrap {
-			min-height: 380px;
+			min-height: auto;
 		}
 
 		.project-feature .project-body {
@@ -612,14 +621,15 @@
 
 		.project-media-wrap {
 			position: relative;
-			min-height: 240px;
+			min-height: auto;
 			padding: 12px;
 		}
 
 		.project-card img {
 			width: 100%;
-			height: 100%;
-			min-height: 220px;
+			height: auto;
+			aspect-ratio: var(--card-media-ratio);
+			min-height: auto;
 			object-fit: cover;
 			border-radius: 14px;
 			border: 1px solid rgba(255, 255, 255, 0.12);
@@ -681,14 +691,15 @@
 		}
 
 		.life-card.life-wide .life-image {
-			min-height: 320px;
+			min-height: auto;
 			padding: 12px;
 		}
 
 		.life-card.life-wide .life-image img {
 			width: 100%;
-			height: 100%;
-			min-height: 300px;
+			height: auto;
+			aspect-ratio: var(--card-media-ratio);
+			min-height: auto;
 			object-fit: cover;
 			border-radius: 14px;
 			border: 1px solid rgba(255, 255, 255, 0.12);
@@ -775,7 +786,7 @@
 			}
 
 			.project-feature .project-media-wrap {
-				min-height: 280px;
+				min-height: auto;
 			}
 
 			.life-card.life-wide {
@@ -783,7 +794,7 @@
 			}
 
 			.life-card.life-wide .life-image {
-				min-height: 240px;
+				min-height: auto;
 			}
 
 			.metric-grid {
@@ -837,7 +848,7 @@
 			}
 
 			.project-feature .project-media-wrap {
-				min-height: 240px;
+				min-height: auto;
 			}
 
 			.life-card.life-wide {
@@ -845,7 +856,7 @@
 			}
 
 			.life-card.life-wide .life-image {
-				min-height: 200px;
+				min-height: auto;
 			}
 
 			.hero-copy,
@@ -888,7 +899,7 @@
 		}
 	</style>
 </head>
-<body class="zero-body-mode">
+<body class="zero-body-mode media-3x4" data-base-domain="your-domain.com">
 	<canvas id="particle-canvas" aria-hidden="true"></canvas>
 	<div class="bg-grid" aria-hidden="true"></div>
 	<div class="bg-glow" aria-hidden="true"></div>
@@ -904,12 +915,12 @@
 					</div>
 				</div>
 				<nav class="nav-links" aria-label="页面导航">
-					<a href="#overview">概览</a>
-					<a href="#work">运营作品</a>
-					<a href="#lab">代码作品</a>
-					<a href="#life">生活实验</a>
-					<a href="#notes">学习笔记</a>
-					<a href="#contact">联系</a>
+					<a href="#overview" data-subdomain="overview">概览</a>
+					<a href="#work" data-subdomain="work">运营作品</a>
+					<a href="#lab" data-subdomain="lab">代码作品</a>
+					<a href="#life" data-subdomain="life">生活实验</a>
+					<a href="#notes" data-subdomain="notes">学习笔记</a>
+					<a href="#contact" data-subdomain="contact">联系</a>
 				</nav>
 			</div>
 		</header>
@@ -920,7 +931,7 @@
 					<div class="hero-copy reveal">
 						<div class="hero-intro">
 							<div class="eyebrow">A multi-column personal hub</div>
-							<h1>把职业与生活沉淀为长期更新的个人站点</h1>
+							<h1>个人站点</h1>
 							<p>
 								不是静态履历，而是持续更新的个人站点
 							</p>
@@ -928,9 +939,9 @@
 						<div class="hero-tags" aria-label="核心标签">
 							<span>21 岁</span>
 							<span>新媒体运营</span>
-							<span>Vibe Coding 学习者</span>
+							<span>Vibe Coding learner</span>
 							<span>健身 / 徒步</span>
-							<span>性价比生活</span>
+							<span>番剧爱好者</span>
 						</div>
 						<div class="hero-actions">
 							<a class="button-primary" href="#work">查看代表项目</a>
@@ -949,10 +960,10 @@
 						<div class="now-card">
 							<div class="meta-label">Now</div>
 							<h2>当前状态</h2>
-							<p>系统学习 Vibe Coding，持续实验与积累</p>
+							<p>系统学习 Vibe Coding</p>
 							<div class="stat-tags">
 								<span>求职可用</span>
-								<span>公开部署</span>
+								<span>持续进化</span>
 								<span>持续更新</span>
 							</div>
 						</div>
@@ -1040,7 +1051,7 @@
 								<li>获赞收藏 51.5 万+</li>
 								<li>爆款内容曝光 80 万+</li>
 							</ul>
-							<div class="editorial-meta"><span>平台矩阵</span><span>内容增长</span><span>用户反馈反推选题</span></div>
+							<div class="editorial-meta"><span>平台矩阵</span><span>内容增长</span><span>用户反馈</span></div>
 							<div class="item-tags"><span>小红书</span><span>抖音</span><span>视频号</span></div>
 						</div>
 					</article>
@@ -1123,9 +1134,9 @@
 
 				<div class="grid-two">
 					<article class="feature-card feature-wide reveal">
-						<strong>前端交互实验</strong>
-						<h3>每次实践形成一条记录</h3>
-						<p>按统一结构持续发布</p>
+						<strong>前端交互</strong>
+						<h3>真实记录</h3>
+						<p>持续发布</p>
 						<div class="editorial-meta"><span>连载栏目</span><span>前端实验</span><span>长期更新</span></div>
 						<div class="item-tags"><span>HTML/CSS</span><span>JavaScript</span><span>交互</span></div>
 					</article>
@@ -1136,15 +1147,15 @@
 						<div class="item-tags"><span>落地页</span><span>组件</span><span>品牌化</span></div>
 					</article>
 					<article class="feature-card reveal">
-						<strong>工具与自动化</strong>
-						<h3>小工具也值得被出版</h3>
-						<p>小体量，高复用</p>
+						<strong>工具</strong>
+						<h3>自动化</h3>
+						<p>实用</p>
 						<div class="item-tags"><span>脚本</span><span>自动化</span><span>效率</span></div>
 					</article>
 					<article class="feature-card reveal">
 						<strong>学习路线</strong>
-						<h3>每篇都保留统一结构</h3>
-						<p>问题、做法、结果、下一步</p>
+						<h3>系统学习</h3>
+						<p>标准化SPO</p>
 						<div class="item-tags"><span>问题</span><span>做法</span><span>复盘</span></div>
 					</article>
 				</div>
@@ -1154,7 +1165,7 @@
 				<div class="section-heading reveal">
 					<div>
 						<span>Life experiments</span>
-						<h2>生活区记录长期状态</h2>
+						<h2>生活区</h2>
 					</div>
 					<p class="section-intro">训练、出行、日常细节的记录</p>
 				</div>
@@ -1163,8 +1174,8 @@
 					<article class="life-card life-wide reveal">
 						<div>
 							<strong>健身</strong>
-							<h3>训练记录是最稳定的长期项目</h3>
-							<p>持续记录计划、体脂、饮食和执行反馈。用可追踪的数据替代情绪化表达。</p>
+							<h3>训练记录</h3>
+							<p>持续记录计划、体脂、饮食和执行反馈。用可追踪的数据替代情绪化表达</p>
 							<div class="editorial-meta"><span>长期主义</span><span>训练记录</span><span>自我管理</span></div>
 							<div class="item-tags"><span>训练计划</span><span>减脂</span><span>长期主义</span></div>
 						</div>
@@ -1174,8 +1185,8 @@
 					</article>
 					<article class="life-card reveal">
 						<strong>户外</strong>
-						<h3>徒步，更新观察与节奏。</h3>
-						<p>记录路线、装备与现场感受。内容保持真实，也更有呼吸感。</p>
+						<h3>徒步</h3>
+						<p>记录路线、装备与现场感受</p>
 						<div class="item-tags"><span>徒步</span><span>路线</span><span>探索世界</span></div>
 					</article>
 
@@ -1186,16 +1197,16 @@
 				<div class="section-heading reveal">
 					<div>
 						<span>Notes & writing</span>
-						<h2>笔记是价值沉淀</h2>
+						<h2>笔记</h2>
 					</div>
-					<p class="section-intro">方法、提示词、工具的技能积累</p>
+					<p class="section-intro">技能积累</p>
 				</div>
 
 				<div class="notes-grid">
 					<article class="note-card note-wide reveal">
 						<strong>运营方法论</strong>
-						<h3>把案例里的经验，慢慢写成自己的一套运营语言。</h3>
-						<p>选题、节奏、反馈与复盘长期记录后，会成为高价值知识资产。</p>
+						<h3>案例</h3>
+						<p>识资产。</p>
 						<div class="editorial-meta"><span>知识资产</span><span>运营语言</span><span>长期沉淀</span></div>
 						<div class="item-tags"><span>方法论</span><span>复盘</span><span>增长</span></div>
 					</article>
@@ -1208,7 +1219,7 @@
 					<article class="note-card reveal">
 						<strong>随笔与复盘</strong>
 						<h3>为主观表达预留空间</h3>
-						<p>阶段总结、社交观察与自我管理，让网站更真实，不止是资料集。</p>
+						<p>资料集。</p>
 						<div class="item-tags"><span>思考</span><span>阶段总结</span><span>个人表达</span></div>
 					</article>
 				</div>
@@ -1239,6 +1250,20 @@
 		(function () {
 			const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 			const revealItems = document.querySelectorAll(".reveal");
+			const allNavLinks = document.querySelectorAll(".nav-links a");
+			const baseDomain = (document.body.getAttribute("data-base-domain") || "").trim();
+			const useSubdomainNav = baseDomain && baseDomain !== "your-domain.com";
+
+			if (useSubdomainNav) {
+				allNavLinks.forEach(function (link) {
+					const subdomain = link.getAttribute("data-subdomain");
+					if (!subdomain) {
+						return;
+					}
+					link.setAttribute("href", "https://" + subdomain + "." + baseDomain);
+				});
+			}
+
 			const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
 			const sections = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
 
