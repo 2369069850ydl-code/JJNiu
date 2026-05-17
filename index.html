@@ -1,35 +1,1373 @@
-#!/usr/bin/env python3
-# 修复 life-wide 卡片的缩进和结构
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta
+		name="description"
+		content="杨戴霖的个人主页，聚合新媒体运营项目、Vibe Coding 实验、生活方式记录与学习笔记。"
+	/>
+	<title>杨戴霖 | 个人主页</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@500;600;700&display=swap"
+		rel="stylesheet"
+	/>
+	<style>
+		:root {
+			color-scheme: dark;
+			--bg: #12110f;
+			--bg-soft: #1a1815;
+			--panel: rgba(250, 245, 236, 0.05);
+			--panel-strong: rgba(250, 245, 236, 0.08);
+			--line: rgba(232, 224, 210, 0.11);
+			--line-strong: rgba(232, 224, 210, 0.18);
+			--text: #f7f2ea;
+			--muted: #b2aa9f;
+			--soft: #ddd5c9;
+			--blue: #7ea8b7;
+			--cyan: #8eb7ab;
+			--gold: #ddb07d;
+			--emerald: #73b49a;
+			--coral: #cc785c;
+			--coral-deep: #a9583e;
+			--cream: #efe6d9;
+			--shadow: 0 10px 32px rgba(0, 0, 0, 0.16);
+			--radius-xl: 24px;
+			--radius-lg: 18px;
+			--radius-md: 12px;
+			--max: 1200px;
+		}
 
-with open('index.html', 'r', encoding='utf-8') as f:
-    content = f.read()
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
 
-# 替换健身卡片的内容，添加合适的缩进和图片容器
-old_card = '''					<article class="life-card life-wide reveal">
+		html {
+			scroll-behavior: smooth;
+		}
+
+		body {
+			min-height: 100vh;
+			font-family: "Manrope", "PingFang SC", "Microsoft YaHei", sans-serif;
+			background:
+				radial-gradient(circle at top, rgba(204, 120, 92, 0.12), transparent 28%),
+				radial-gradient(circle at 80% 18%, rgba(142, 183, 171, 0.08), transparent 22%),
+				radial-gradient(circle at 20% 100%, rgba(221, 176, 125, 0.08), transparent 24%),
+				var(--bg);
+			color: var(--text);
+			overflow-x: hidden;
+			letter-spacing: -0.01em;
+		}
+
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		img {
+			display: block;
+			max-width: 100%;
+		}
+
+		#particle-canvas,
+		.bg-grid,
+		.bg-glow {
+			position: fixed;
+			inset: 0;
+			pointer-events: none;
+		}
+
+		#particle-canvas {
+			z-index: 0;
+		}
+
+		.bg-grid {
+			z-index: 1;
+			opacity: 0.06;
+			background-image:
+				linear-gradient(rgba(239, 230, 217, 0.045) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(239, 230, 217, 0.045) 1px, transparent 1px);
+			background-size: 44px 44px;
+			mask-image: radial-gradient(circle at 50% 20%, black 20%, transparent 76%);
+		}
+
+		.bg-glow {
+			z-index: 2;
+			filter: blur(110px);
+			opacity: 0.36;
+			background:
+				radial-gradient(circle at 12% 20%, rgba(204, 120, 92, 0.16), transparent 28%),
+				radial-gradient(circle at 80% 22%, rgba(115, 180, 154, 0.1), transparent 22%),
+				radial-gradient(circle at 72% 82%, rgba(221, 176, 125, 0.08), transparent 24%);
+		}
+
+		.site-shell {
+			position: relative;
+			z-index: 3;
+		}
+
+		.wrap {
+			width: min(calc(100% - 32px), var(--max));
+			margin: 0 auto;
+		}
+
+		.top-nav {
+			position: sticky;
+			top: 0;
+			z-index: 40;
+			padding: 16px 0;
+			backdrop-filter: blur(16px);
+			background: linear-gradient(to bottom, rgba(18, 17, 15, 0.9), rgba(18, 17, 15, 0.28));
+		}
+
+		.nav-inner {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+			padding: 14px 18px;
+			border: 1px solid var(--line);
+			background: rgba(28, 25, 21, 0.76);
+			border-radius: 18px;
+			box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+		}
+
+		.brand-block {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.brand-mark {
+			width: 12px;
+			height: 12px;
+			border-radius: 999px;
+			background: linear-gradient(135deg, var(--gold), var(--coral) 58%, #f2ceb8);
+			box-shadow: 0 0 20px rgba(204, 120, 92, 0.34);
+		}
+
+		.brand-copy strong,
+		.section-heading h2,
+		.hero-copy h1,
+		.contact-panel h2 {
+			font-family: "Noto Serif SC", "Songti SC", serif;
+		}
+
+		.brand-copy strong {
+			display: block;
+			font-size: 13px;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+		}
+
+		.brand-copy span {
+			display: block;
+			font-size: 11px;
+			color: var(--muted);
+			letter-spacing: 0.02em;
+		}
+
+		.nav-links {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+			gap: 8px;
+		}
+
+		.nav-links a {
+			padding: 9px 12px;
+			border-radius: 10px;
+			font-size: 13px;
+			color: var(--muted);
+			transition: background-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+		}
+
+		.nav-links a:hover,
+		.nav-links a:focus-visible,
+		.button-primary:hover,
+		.button-primary:focus-visible,
+		.button-secondary:hover,
+		.button-secondary:focus-visible {
+			transform: translateY(-2px);
+			outline: none;
+		}
+
+		.nav-links a:hover,
+		.nav-links a:focus-visible {
+			background: rgba(239, 230, 217, 0.08);
+			color: var(--text);
+		}
+
+		.nav-links a.is-active {
+			background: rgba(204, 120, 92, 0.12);
+			color: var(--text);
+		}
+
+		main section {
+			padding: 68px 0 18px;
+		}
+
+		.hero {
+			padding-top: 28px;
+		}
+
+		.hero-grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+			gap: 22px;
+			align-items: stretch;
+			min-height: calc(100vh - 128px);
+		}
+
+		.hero-copy,
+		.hero-aside,
+		.panel,
+		.feature-card,
+		.project-card,
+		.note-card,
+		.life-card,
+		.contact-panel {
+			border: 1px solid var(--line);
+			background: linear-gradient(180deg, rgba(239, 230, 217, 0.05), rgba(239, 230, 217, 0.022));
+			backdrop-filter: blur(10px);
+			box-shadow: var(--shadow);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero-copy::before,
+		.hero-aside::before,
+		.panel::before,
+		.feature-card::before,
+		.project-card::before,
+		.note-card::before,
+		.life-card::before,
+		.contact-panel::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(180deg, rgba(255, 245, 233, 0.06), rgba(255, 255, 255, 0));
+			opacity: 0.55;
+			pointer-events: none;
+		}
+
+		.hero-copy {
+			padding: clamp(28px, 4vw, 48px);
+			border-radius: var(--radius-xl);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			gap: 28px;
+		}
+
+		.hero-intro {
+			display: grid;
+			gap: 18px;
+		}
+
+		.hero-journal {
+			display: grid;
+			grid-template-columns: 120px minmax(0, 1fr);
+			gap: 16px;
+			align-items: start;
+			padding-top: 20px;
+			border-top: 1px solid rgba(239, 230, 217, 0.08);
+		}
+
+		.hero-journal-label {
+			font-size: 11px;
+			font-weight: 600;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: #deceb8;
+		}
+
+		.hero-journal p {
+			font-size: 15px;
+			line-height: 1.8;
+			color: var(--muted);
+		}
+
+		.eyebrow,
+		.section-heading span,
+		.meta-label {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 11px;
+			font-weight: 600;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			color: #d8dded;
+		}
+
+		.eyebrow::before,
+		.section-heading span::before,
+		.meta-label::before {
+			content: "";
+			width: 28px;
+			height: 1px;
+			background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75));
+		}
+
+		.hero-copy h1 {
+			font-size: clamp(48px, 8vw, 102px);
+			line-height: 1.02;
+			letter-spacing: -0.055em;
+			max-width: 10ch;
+			font-weight: 600;
+		}
+
+		.hero-copy p {
+			max-width: 760px;
+			font-size: clamp(17px, 1.9vw, 23px);
+			line-height: 1.72;
+			color: var(--soft);
+		}
+
+		.hero-tags,
+		.stat-tags,
+		.item-tags,
+		.contact-meta,
+		.hero-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+
+		.hero-tags span,
+		.stat-tags span,
+		.item-tags span,
+		.contact-meta span {
+			padding: 8px 12px;
+			border-radius: 9px;
+			background: rgba(239, 230, 217, 0.045);
+			border: 1px solid rgba(239, 230, 217, 0.08);
+			font-size: 12px;
+			color: #eee4d6;
+		}
+
+		.button-primary,
+		.button-secondary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 52px;
+			padding: 0 22px;
+			border-radius: 12px;
+			font-size: 14px;
+			font-weight: 600;
+			transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background-color 0.35s ease;
+		}
+
+		.button-primary {
+			background: linear-gradient(135deg, #d48a6c, var(--coral) 58%, var(--coral-deep));
+			color: #fff9f5;
+			box-shadow: 0 12px 28px rgba(169, 88, 62, 0.24);
+		}
+
+		.button-secondary {
+			background: rgba(239, 230, 217, 0.03);
+			color: var(--text);
+			border: 1px solid var(--line-strong);
+		}
+
+		.hero-aside {
+			padding: 22px;
+			border-radius: var(--radius-xl);
+			display: grid;
+			gap: 14px;
+		}
+
+		.portrait-card,
+		.now-card,
+		.profile-meta,
+		.metric {
+			padding: 16px;
+			border-radius: 16px;
+			background: rgba(239, 230, 217, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+		}
+
+		.portrait-card {
+			padding: 12px;
+		}
+
+		.portrait-card img {
+			width: 100%;
+			aspect-ratio: 4 / 5;
+			object-fit: cover;
+			border-radius: 16px;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			filter: saturate(0.94) contrast(1.04);
+		}
+
+		.now-card h2,
+		.profile-meta h3,
+		.feature-card h3,
+		.project-card h3,
+		.life-card h3,
+		.note-card h3,
+		.contact-panel h2 {
+			font-size: clamp(21px, 2.4vw, 29px);
+			line-height: 1.1;
+			margin-bottom: 10px;
+		}
+
+		.now-card p,
+		.profile-meta li,
+		.section-intro,
+		.feature-card p,
+		.project-card p,
+		.project-card li,
+		.life-card p,
+		.note-card p,
+		.contact-panel p {
+			font-size: 15px;
+			line-height: 1.8;
+			color: var(--muted);
+		}
+
+		.profile-meta ul {
+			list-style: none;
+			display: grid;
+			gap: 10px;
+		}
+
+		.section-heading {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 18px;
+			align-items: end;
+			margin-bottom: 28px;
+			padding-top: 8px;
+			border-top: 1px solid rgba(239, 230, 217, 0.08);
+		}
+
+		.section-heading h2 {
+			font-size: clamp(34px, 5vw, 60px);
+			line-height: 1.08;
+			letter-spacing: -0.045em;
+			margin-top: 14px;
+			font-weight: 600;
+		}
+
+		.section-intro {
+			max-width: 640px;
+		}
+
+		.section-intro strong {
+			color: var(--text);
+			font-weight: 600;
+		}
+
+		.grid-two,
+		.grid-three,
+		.projects-grid,
+		.notes-grid,
+		.life-grid,
+		.metric-grid {
+			display: grid;
+			gap: 16px;
+		}
+
+		.grid-two {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.grid-three,
+		.notes-grid,
+		.life-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.mosaic-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 16px;
+		}
+
+		.panel,
+		.feature-card,
+		.project-card,
+		.note-card,
+		.life-card,
+		.contact-panel {
+			border-radius: var(--radius-lg);
+			padding: 24px;
+			transition: transform 0.45s ease, border-color 0.45s ease, background-color 0.45s ease;
+		}
+
+		.feature-card:hover,
+		.project-card:hover,
+		.note-card:hover,
+		.life-card:hover,
+		.contact-panel:hover {
+			transform: translateY(-4px);
+			border-color: rgba(255, 255, 255, 0.16);
+		}
+
+		.metric-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			margin-top: 18px;
+		}
+
+		.metric strong {
+			display: block;
+			font-size: clamp(28px, 4vw, 44px);
+			line-height: 1;
+			margin-bottom: 8px;
+		}
+
+		.metric span,
+		.feature-card strong,
+		.project-card strong,
+		.note-card strong,
+		.life-card strong {
+			font-size: 13px;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: #e2d6c7;
+		}
+
+		.feature-card {
+			background:
+				linear-gradient(180deg, rgba(239, 230, 217, 0.05), rgba(239, 230, 217, 0.025)),
+				radial-gradient(circle at top right, rgba(204, 120, 92, 0.08), transparent 35%);
+		}
+
+		.feature-card.feature-wide {
+			grid-column: span 2;
+			padding: 30px;
+		}
+
+		.feature-card.feature-wide h3,
+		.note-card.note-wide h3,
+		.life-card.life-wide h3 {
+			font-size: clamp(26px, 2.8vw, 38px);
+			line-height: 1.08;
+			max-width: 14ch;
+		}
+
+		.feature-card.feature-wide p,
+		.note-card.note-wide p,
+		.life-card.life-wide p {
+			max-width: 52ch;
+		}
+
+		.editorial-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 16px;
+			margin-top: 18px;
+			padding-top: 18px;
+			border-top: 1px solid rgba(239, 230, 217, 0.08);
+			font-size: 13px;
+			color: var(--muted);
+		}
+
+		.projects-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.project-card {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.project-card:not(.project-feature) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.project-card:not(.project-feature) .project-media-wrap {
+			min-height: 200px;
+			padding: 10px;
+		}
+
+		.project-card:not(.project-feature) .project-body {
+			padding: 18px;
+		}
+
+		.project-feature {
+			grid-column: 1 / -1;
+			grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.68fr);
+			padding: 0;
+			display: grid;
+		}
+
+		.project-feature .project-media-wrap {
+			min-height: 380px;
+		}
+
+		.project-feature .project-body {
+			padding: 32px;
+		}
+
+		.project-media-wrap {
+			position: relative;
+			min-height: 240px;
+			padding: 12px;
+		}
+
+		.project-card img {
+			width: 100%;
+			height: 100%;
+			min-height: 220px;
+			object-fit: cover;
+			border-radius: 14px;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			filter: saturate(0.96) contrast(1.02);
+		}
+
+		.project-body {
+			padding: 20px;
+			display: grid;
+			align-content: start;
+			gap: 8px;
+		}
+
+		.project-deck {
+			font-size: 16px;
+			line-height: 1.75;
+			color: var(--soft);
+			margin-top: 2px;
+		}
+
+		.project-body .editorial-meta {
+			margin-top: 10px;
+			padding-top: 14px;
+		}
+
+		.project-card ul {
+			padding-left: 18px;
+			margin-top: 14px;
+			display: grid;
+			gap: 8px;
+		}
+
+		.project-card .item-tags,
+		.note-card .item-tags,
+		.life-card .item-tags {
+			margin-top: 14px;
+		}
+
+		.life-card {
+			background:
+				linear-gradient(180deg, rgba(239, 230, 217, 0.05), rgba(239, 230, 217, 0.025)),
+				radial-gradient(circle at top right, rgba(115, 180, 154, 0.08), transparent 38%);
+			position: relative;
+		}
+
+		.life-card.life-wide {
+			grid-column: span 2;
+			display: grid;
+			grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.life-card.life-wide > div:first-child {
+			padding: 32px;
+			display: grid;
+			align-content: start;
+			gap: 12px;
+		}
+
+		.life-card.life-wide .life-image {
+			min-height: 320px;
+			padding: 12px;
+		}
+
+		.life-card.life-wide .life-image img {
+			width: 100%;
+			height: 100%;
+			min-height: 300px;
+			object-fit: cover;
+			border-radius: 14px;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			filter: saturate(0.96) contrast(1.02);
+		}
+
+		.note-card {
+			background:
+				linear-gradient(180deg, rgba(239, 230, 217, 0.05), rgba(239, 230, 217, 0.025)),
+				radial-gradient(circle at top right, rgba(221, 176, 125, 0.08), transparent 36%);
+		}
+
+		.note-card.note-wide {
+			grid-column: span 2;
+		}
+
+		.contact-panel {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 18px;
+			align-items: center;
+			margin-bottom: 60px;
+		}
+
+		.zero-body-mode main p {
+			display: none;
+		}
+
+		.zero-body-mode .feature-card h3,
+		.zero-body-mode .project-card h3,
+		.zero-body-mode .life-card h3,
+		.zero-body-mode .note-card h3,
+		.zero-body-mode .contact-panel h2 {
+			margin-bottom: 0;
+		}
+
+		.zero-body-mode .project-body,
+		.zero-body-mode .life-card.life-wide > div:first-child {
+			gap: 14px;
+		}
+
+		.zero-body-mode .project-card ul,
+		.zero-body-mode .project-card .item-tags,
+		.zero-body-mode .note-card .item-tags,
+		.zero-body-mode .life-card .item-tags {
+			margin-top: 10px;
+		}
+
+		.reveal {
+			opacity: 0;
+			transform: translateY(24px);
+			transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+		}
+
+		.reveal.is-visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		@media (max-width: 1080px) {
+			.hero-grid,
+			.contact-panel,
+			.section-heading,
+			.project-feature {
+				grid-template-columns: 1fr;
+			}
+
+			.mosaic-grid,
+			.projects-grid,
+			.grid-three,
+			.notes-grid,
+			.life-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.feature-card.feature-wide,
+			.note-card.note-wide,
+			.life-card.life-wide {
+				grid-column: span 2;
+			}
+
+			.project-feature {
+				grid-template-columns: 1fr;
+			}
+
+			.project-feature .project-media-wrap {
+				min-height: 280px;
+			}
+
+			.life-card.life-wide {
+				grid-template-columns: 1fr;
+			}
+
+			.life-card.life-wide .life-image {
+				min-height: 240px;
+			}
+
+			.metric-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 780px) {
+			.top-nav {
+				padding: 12px 0;
+			}
+
+			.nav-inner {
+				border-radius: 26px;
+				padding: 14px;
+				align-items: flex-start;
+				flex-direction: column;
+			}
+
+			.nav-links {
+				justify-content: flex-start;
+			}
+
+			main section {
+				padding: 44px 0 16px;
+			}
+
+			.hero-grid,
+			.grid-two,
+			.mosaic-grid,
+			.projects-grid,
+			.grid-three,
+			.notes-grid,
+			.life-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.hero-journal {
+				grid-template-columns: 1fr;
+				gap: 8px;
+			}
+
+			.feature-card.feature-wide,
+			.note-card.note-wide,
+			.life-card.life-wide {
+				grid-column: auto;
+			}
+
+			.project-feature {
+				grid-template-columns: 1fr;
+			}
+
+			.project-feature .project-media-wrap {
+				min-height: 240px;
+			}
+
+			.life-card.life-wide {
+				grid-template-columns: 1fr;
+			}
+
+			.life-card.life-wide .life-image {
+				min-height: 200px;
+			}
+
+			.hero-copy,
+			.hero-aside,
+			.panel,
+			.feature-card,
+			.project-card,
+			.note-card,
+			.life-card,
+			.contact-panel {
+				padding: 20px;
+				border-radius: 22px;
+			}
+
+			.hero-copy h1 {
+				max-width: none;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			html {
+				scroll-behavior: auto;
+			}
+
+			.reveal,
+			.reveal.is-visible,
+			.nav-links a,
+			.button-primary,
+			.button-secondary {
+				transition: none;
+				transform: none;
+				opacity: 1;
+			}
+
+			.bg-glow,
+			.bg-grid,
+			#particle-canvas {
+				display: none;
+			}
+		}
+	</style>
+</head>
+<body class="zero-body-mode">
+	<canvas id="particle-canvas" aria-hidden="true"></canvas>
+	<div class="bg-grid" aria-hidden="true"></div>
+	<div class="bg-glow" aria-hidden="true"></div>
+
+	<div class="site-shell">
+		<header class="top-nav">
+			<div class="wrap nav-inner">
+				<div class="brand-block">
+					<div class="brand-mark" aria-hidden="true"></div>
+					<div class="brand-copy">
+						<strong>Yang Dailin</strong>
+						<span>Operator · Builder · Recorder</span>
+					</div>
+				</div>
+				<nav class="nav-links" aria-label="页面导航">
+					<a href="#overview">概览</a>
+					<a href="#work">运营作品</a>
+					<a href="#lab">代码作品</a>
+					<a href="#life">生活实验</a>
+					<a href="#notes">学习笔记</a>
+					<a href="#contact">联系</a>
+				</nav>
+			</div>
+		</header>
+
+		<main>
+			<section class="hero wrap" id="overview">
+				<div class="hero-grid">
+					<div class="hero-copy reveal">
+						<div class="hero-intro">
+							<div class="eyebrow">A multi-column personal hub</div>
+							<h1>把职业与生活，沉淀为一个长期更新的个人站点。</h1>
+							<p>
+								不是静态履历，而是持续更新的个人站点。项目看结果，实验看方法，生活看状态。
+							</p>
+						</div>
+						<div class="hero-tags" aria-label="核心标签">
+							<span>21 岁</span>
+							<span>新媒体运营</span>
+							<span>Vibe Coding 学习者</span>
+							<span>健身 / 徒步</span>
+							<span>性价比生活</span>
+						</div>
+						<div class="hero-actions">
+							<a class="button-primary" href="#work">查看代表项目</a>
+							<a class="button-secondary" href="杨戴霖%20·%20内容作品集.pdf" target="_blank" rel="noreferrer">打开 PDF 作品集</a>
+						</div>
+						<div class="hero-journal">
+							<div class="hero-journal-label">编辑手记</div>
+							<p>一个网站承载多重身份，才有长期价值。作品、笔记、生活并列即可。</p>
+						</div>
+					</div>
+
+					<aside class="hero-aside reveal">
+						<div class="portrait-card">
+							<img src="profile.jpg" alt="杨戴霖证件照" />
+						</div>
+						<div class="now-card">
+							<div class="meta-label">Now</div>
+							<h2>当前状态</h2>
+							<p>系统学习 Vibe Coding。每次实践按栏目更新，持续积累。</p>
+							<div class="stat-tags">
+								<span>求职可用</span>
+								<span>公开部署</span>
+								<span>持续更新</span>
+							</div>
+						</div>
+						<div class="profile-meta">
+							<h3>个人档案</h3>
+							<ul>
+								<li>上海 · 市场营销本科 · 新媒体运营管培生方向</li>
+								<li>长期内容平台：小红书、抖音、视频号</li>
+								<li>延伸关注：前端表达、个人品牌、内容产品化</li>
+							</ul>
+						</div>
+					</aside>
+				</div>
+			</section>
+
+			<section class="wrap" id="structure">
+				<div class="section-heading reveal">
+					<div>
+						<span>Site structure</span>
+						<h2>一个域名，承载长期内容。</h2>
+					</div>
+					<p class="section-intro"><strong>不是功能堆叠，是阅读动线。</strong> 先认识你，再看结果。</p>
+				</div>
+				<div class="mosaic-grid">
+					<article class="feature-card feature-wide reveal">
+						<strong>01 / 档案</strong>
+						<h3>首页先像封面，先把“这个人是谁”说清楚。</h3>
+						<p>首页像封面。先给身份、方向与当前状态。</p>
+						<div class="editorial-meta"><span>封面导语</span><span>核心标签</span><span>第一印象</span></div>
+						<div class="item-tags"><span>身份标签</span><span>联系方式</span><span>当前状态</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>02 / 运营作品</strong>
+						<h3>作品优先，结果先行</h3>
+						<p>代表案例置顶呈现。</p>
+						<div class="item-tags"><span>案例</span><span>数据结果</span><span>平台矩阵</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>03 / 代码作品</strong>
+						<h3>实验持续归档</h3>
+						<p>每次实践都可追溯。</p>
+						<div class="item-tags"><span>前端实验</span><span>小工具</span><span>持续堆叠</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>04 / 生活实验</strong>
+						<h3>保留真实日常</h3>
+						<p>训练与出行并列记录。</p>
+						<div class="item-tags"><span>健身</span><span>户外</span><span>穿搭</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>05 / 学习笔记</strong>
+						<h3>方法沉淀为资产</h3>
+						<p>复盘长期积累价值。</p>
+						<div class="item-tags"><span>方法论</span><span>复盘</span><span>知识沉淀</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>06 / 随笔</strong>
+						<h3>保留作者视角</h3>
+						<p>让表达持续发生。</p>
+						<div class="item-tags"><span>随笔</span><span>复盘</span><span>表达</span></div>
+					</article>
+				</div>
+			</section>
+
+			<section class="wrap" id="work">
+				<div class="section-heading reveal">
+					<div>
+						<span>Featured work</span>
+						<h2>运营作品，是核心可信度。</h2>
+					</div>
+					<p class="section-intro"><strong>先看代表作，再看补充项。</strong> 核心项目优先呈现。</p>
+				</div>
+
+				<div class="projects-grid">
+					<article class="project-card project-feature reveal">
+						<div class="project-media-wrap">
+							<img src="portfolio_images/page02_img01.png" alt="运动户外品牌矩阵运营项目截图" />
+						</div>
+						<div class="project-body">
+							<strong>矩阵运营</strong>
+							<h3>运动户外品牌矩阵运营</h3>
+							<p class="project-deck">独立搭建并运营品牌矩阵。选题、反馈与节奏形成稳定系统。</p>
+							<ul>
+								<li>累计粉丝 20 万+</li>
+								<li>获赞收藏 51.5 万+</li>
+								<li>爆款内容曝光 80 万+</li>
+							</ul>
+							<div class="editorial-meta"><span>平台矩阵</span><span>内容增长</span><span>用户反馈反推选题</span></div>
+							<div class="item-tags"><span>小红书</span><span>抖音</span><span>视频号</span></div>
+						</div>
+					</article>
+
+					<article class="project-card reveal">
+						<div class="project-media-wrap">
+							<img src="portfolio_images/page05_img01.png" alt="达人联动拉新增长活动项目截图" />
+						</div>
+						<div class="project-body">
+							<strong>拉新增长</strong>
+							<h3>达人联动拉新增长活动</h3>
+							<p class="project-deck">整合利益点、达人协作和转化动作。重点是链路清晰。</p>
+							<ul>
+								<li>组织 30+ 达人同步联动</li>
+								<li>新客转化率提升 16%</li>
+								<li>月销环比增长 150%</li>
+							</ul>
+							<div class="editorial-meta"><span>活动机制</span><span>达人协作</span></div>
+							<div class="item-tags"><span>活动策划</span><span>拉新</span><span>转化</span></div>
+						</div>
+					</article>
+
+					<article class="project-card reveal">
+						<div class="project-media-wrap">
+							<img src="portfolio_images/page04_img01.png" alt="垂类账号内容编导项目截图" />
+						</div>
+						<div class="project-body">
+							<strong>内容编导</strong>
+							<h3>垂类账号内容编导</h3>
+							<p class="project-deck">提炼可复制的内容模型。选题、剪辑、互动可跨行业迁移。</p>
+							<ul>
+								<li>3 个月涨粉 2.6 万</li>
+								<li>累计播放 200 万+</li>
+								<li>招商询盘线索 100+</li>
+							</ul>
+							<div class="editorial-meta"><span>脚本系统</span><span>行业迁移</span></div>
+							<div class="item-tags"><span>短视频</span><span>脚本</span><span>线索转化</span></div>
+						</div>
+					</article>
+
+					<article class="project-card reveal">
+						<div class="project-media-wrap">
+							<img src="portfolio_images/page07_img01.png" alt="AI 场景化内容营销项目截图" />
+						</div>
+						<div class="project-body">
+							<strong>B 端内容</strong>
+							<h3>AI 场景化内容营销</h3>
+							<p class="project-deck">把技术话题转成业务场景表达。用快节奏脚本测试客户反馈。</p>
+							<ul>
+								<li>AIGC 脚本效率提升 30%</li>
+								<li>吸引 20+ 企业客户询盘</li>
+								<li>验证 B 端内容增长路径</li>
+							</ul>
+							<div class="editorial-meta"><span>B 端叙事</span><span>场景翻译</span></div>
+							<div class="item-tags"><span>AIGC</span><span>B 端营销</span><span>询盘</span></div>
+						</div>
+					</article>
+				</div>
+
+				<div class="panel reveal" style="margin-top: 18px;">
+					<div class="meta-label">Snapshot</div>
+					<h3 style="margin-top: 10px; font-size: clamp(24px, 3vw, 34px);">最容易被看见的数据，应该集中出现。</h3>
+					<p class="section-intro" style="margin-top: 10px; max-width: none;">运营成绩集中展示。用于求职，也用于建立信任。</p>
+					<div class="metric-grid">
+						<div class="metric"><strong>20 万+</strong><span>矩阵累计粉丝</span></div>
+						<div class="metric"><strong>51.5 万+</strong><span>累计获赞收藏</span></div>
+						<div class="metric"><strong>200+</strong><span>有效客户询盘</span></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="wrap" id="lab">
+				<div class="section-heading reveal">
+					<div>
+						<span>Code lab</span>
+						<h2>把每一次实践，沉淀为可复用的条目。</h2>
+					</div>
+					<p class="section-intro">记录 Vibe Coding 过程。每次实践都可展示、可复盘。</p>
+				</div>
+
+				<div class="grid-two">
+					<article class="feature-card feature-wide reveal">
+						<strong>前端交互实验</strong>
+						<h3>每次实践，形成一条记录。</h3>
+						<p>按统一结构持续发布。</p>
+						<div class="editorial-meta"><span>连载栏目</span><span>前端实验</span><span>长期更新</span></div>
+						<div class="item-tags"><span>HTML/CSS</span><span>JavaScript</span><span>交互</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>产品页面重构</strong>
+						<h3>页面重构训练</h3>
+						<p>结构更清晰，节奏更稳。</p>
+						<div class="item-tags"><span>落地页</span><span>组件</span><span>品牌化</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>工具与自动化</strong>
+						<h3>小工具也值得被出版</h3>
+						<p>小体量，高复用。</p>
+						<div class="item-tags"><span>脚本</span><span>自动化</span><span>效率</span></div>
+					</article>
+					<article class="feature-card reveal">
+						<strong>学习路线</strong>
+						<h3>每篇都保留统一结构</h3>
+						<p>问题、做法、结果、下一步。</p>
+						<div class="item-tags"><span>问题</span><span>做法</span><span>复盘</span></div>
+					</article>
+				</div>
+			</section>
+
+			<section class="wrap" id="life">
+				<div class="section-heading reveal">
+					<div>
+						<span>Life experiments</span>
+						<h2>生活区，记录长期状态。</h2>
+					</div>
+					<p class="section-intro">不写口号，只做记录。训练、出行与日常细节，补足个人维度。</p>
+				</div>
+
+				<div class="life-grid">
+					<article class="life-card life-wide reveal">
 						<div>
 							<strong>健身</strong>
-							<h3>健身不只是日常，它是你整套网站里最稳定的长期叙事。</h3>
-						<p>记录训练计划、体脂变化、饮食策略和执行感受，这些内容会天然地给网站带来一种持续更新的时间感，也会让"自我提升"这件事变得更可信。</p>
-						<div class="editorial-meta"><span>长期主义</span><span>训练记录</span><span>自我管理</span></div>
-						<div class="item-tags"><span>训练计划</span><span>减脂</span><span>长期主义</span></div>
-					</article>'''
-
-new_card = '''					<article class="life-card life-wide reveal">
-						<div>
-							<strong>健身</strong>
-							<h3>健身不只是日常，它是你整套网站里最稳定的长期叙事。</h3>
-							<p>记录训练计划、体脂变化、饮食策略和执行感受，这些内容会天然地给网站带来一种持续更新的时间感，也会让"自我提升"这件事变得更可信。</p>
+							<h3>训练记录，是最稳定的长期项目。</h3>
+							<p>持续记录计划、体脂、饮食和执行反馈。用可追踪的数据替代情绪化表达。</p>
 							<div class="editorial-meta"><span>长期主义</span><span>训练记录</span><span>自我管理</span></div>
 							<div class="item-tags"><span>训练计划</span><span>减脂</span><span>长期主义</span></div>
 						</div>
 						<div class="life-image">
 							<img src="portfolio_images/life_fitness.jpg" alt="健身训练记录" />
 						</div>
-					</article>'''
+					</article>
+					<article class="life-card reveal">
+						<strong>户外</strong>
+						<h3>徒步，更新观察与节奏。</h3>
+						<p>记录路线、装备与现场感受。内容保持真实，也更有呼吸感。</p>
+						<div class="item-tags"><span>徒步</span><span>路线</span><span>探索世界</span></div>
+					</article>
 
-content = content.replace(old_card, new_card)
+				</div>
+			</section>
 
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(content)
+			<section class="wrap" id="notes">
+				<div class="section-heading reveal">
+					<div>
+						<span>Notes & writing</span>
+						<h2>笔记，是长期价值的沉淀。</h2>
+					</div>
+					<p class="section-intro">方法论、提示词和工具模板持续累积后，这里会成为博客与知识库。</p>
+				</div>
 
-print("✓ Life card 已修复")
+				<div class="notes-grid">
+					<article class="note-card note-wide reveal">
+						<strong>运营方法论</strong>
+						<h3>把案例里的经验，慢慢写成自己的一套运营语言。</h3>
+						<p>选题、节奏、反馈与复盘长期记录后，会成为高价值知识资产。</p>
+						<div class="editorial-meta"><span>知识资产</span><span>运营语言</span><span>长期沉淀</span></div>
+						<div class="item-tags"><span>方法论</span><span>复盘</span><span>增长</span></div>
+					</article>
+					<article class="note-card reveal">
+						<strong>Vibe Coding</strong>
+						<h3>记录 Prompt、设计思路与踩坑</h3>
+						<p>这部分内容可沉淀为教程、模板包和工作流资产。</p>
+						<div class="item-tags"><span>Prompt</span><span>工作流</span><span>教程</span></div>
+					</article>
+					<article class="note-card reveal">
+						<strong>随笔与复盘</strong>
+						<h3>为主观表达预留空间</h3>
+						<p>阶段总结、社交观察与自我管理，让网站更真实，不止是资料集。</p>
+						<div class="item-tags"><span>思考</span><span>阶段总结</span><span>个人表达</span></div>
+					</article>
+				</div>
+			</section>
+
+			<section class="wrap" id="contact">
+				<div class="contact-panel reveal">
+					<div>
+						<div class="meta-label">Contact</div>
+						<h2>保持专业表达，也保留合作入口。</h2>
+						<p>联系区保持清晰可达。用于求职、合作与交流。</p>
+						<div class="contact-meta">
+							<span>上海</span>
+							<span>18774722573</span>
+							<span>2369069850@qq.com</span>
+						</div>
+					</div>
+					<div class="hero-actions">
+						<a class="button-primary" href="mailto:2369069850@qq.com">发邮件联系</a>
+						<a class="button-secondary" href="#overview">返回顶部</a>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script>
+		(function () {
+			const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			const revealItems = document.querySelectorAll(".reveal");
+			const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+			const sections = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
+
+			revealItems.forEach(function (item, index) {
+				item.style.transitionDelay = Math.min(index * 45, 220) + "ms";
+			});
+
+			if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+				revealItems.forEach(function (item) {
+					item.classList.add("is-visible");
+				});
+			} else {
+				const observer = new IntersectionObserver(function (entries) {
+					entries.forEach(function (entry) {
+						if (entry.isIntersecting) {
+							entry.target.classList.add("is-visible");
+							observer.unobserve(entry.target);
+						}
+					});
+				}, { threshold: 0.18 });
+
+				revealItems.forEach(function (item) {
+					observer.observe(item);
+				});
+
+				if (sections.length && navLinks.length) {
+					const navObserver = new IntersectionObserver(function (entries) {
+						entries.forEach(function (entry) {
+							if (!entry.isIntersecting) {
+								return;
+							}
+
+							const targetId = entry.target.getAttribute("id");
+							navLinks.forEach(function (link) {
+								link.classList.toggle("is-active", link.getAttribute("href") === "#" + targetId);
+							});
+						});
+					}, { threshold: 0.45, rootMargin: "-10% 0px -35% 0px" });
+
+					sections.forEach(function (section) {
+						navObserver.observe(section);
+					});
+				}
+			}
+
+			if (prefersReducedMotion) {
+				return;
+			}
+
+			const canvas = document.getElementById("particle-canvas");
+			const context = canvas && canvas.getContext ? canvas.getContext("2d") : null;
+			if (!canvas || !context) {
+				return;
+			}
+
+			const particles = [];
+			const glow = document.querySelector(".bg-glow");
+			let width = 0;
+			let height = 0;
+			let animationFrameId = 0;
+			let pointerX = 0;
+			let pointerY = 0;
+			let currentX = 0;
+			let currentY = 0;
+
+			function resizeCanvas() {
+				width = canvas.width = window.innerWidth;
+				height = canvas.height = window.innerHeight;
+			}
+
+			function populateParticles() {
+				particles.length = 0;
+				const count = Math.max(24, Math.floor(width / 34));
+				for (let index = 0; index < count; index += 1) {
+					particles.push({
+						x: Math.random() * width,
+						y: Math.random() * height,
+						vx: (Math.random() - 0.5) * 0.24,
+						vy: (Math.random() - 0.5) * 0.24,
+						radius: Math.random() * 1.7 + 0.4,
+						opacity: Math.random() * 0.35 + 0.18
+					});
+				}
+			}
+
+			function renderParticles() {
+				context.clearRect(0, 0, width, height);
+
+				currentX += (pointerX - currentX) * 0.035;
+				currentY += (pointerY - currentY) * 0.035;
+				if (glow) {
+					glow.style.transform = "translate3d(" + currentX + "px, " + currentY + "px, 0)";
+				}
+
+				for (let index = 0; index < particles.length; index += 1) {
+					const particle = particles[index];
+					particle.x += particle.vx;
+					particle.y += particle.vy;
+
+					if (particle.x < -20) particle.x = width + 20;
+					if (particle.x > width + 20) particle.x = -20;
+					if (particle.y < -20) particle.y = height + 20;
+					if (particle.y > height + 20) particle.y = -20;
+
+					context.beginPath();
+					context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+					context.fillStyle = "rgba(180, 210, 255, " + particle.opacity + ")";
+					context.fill();
+				}
+
+				animationFrameId = window.requestAnimationFrame(renderParticles);
+			}
+
+			function syncCanvas() {
+				resizeCanvas();
+				populateParticles();
+			}
+
+			syncCanvas();
+			renderParticles();
+			window.addEventListener("mousemove", function (event) {
+				pointerX = (event.clientX / window.innerWidth - 0.5) * 18;
+				pointerY = (event.clientY / window.innerHeight - 0.5) * 14;
+			}, { passive: true });
+			window.addEventListener("resize", syncCanvas, { passive: true });
+			window.addEventListener("pagehide", function () {
+				window.cancelAnimationFrame(animationFrameId);
+			}, { once: true });
+		})();
+	</script>
+</body>
+</html>
