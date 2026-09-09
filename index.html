@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#171816">
   <title>杨戴霖 · 个人作品集</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="interactions.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到正文</a>
@@ -30,7 +31,13 @@
     </section>
     <section class="projects wrap" id="projects" aria-labelledby="projects-title">
       <div class="section-heading"><h2 id="projects-title">做过的项目</h2><span>01 — 04</span></div>
-      <article class="project">
+      <nav class="project-nav" aria-label="作品目录">
+        <a href="#brand"><span>01</span> 品牌运营</a>
+        <a href="#campaign"><span>02</span> 活动策划</a>
+        <a href="#video"><span>03</span> 短视频编导</a>
+        <a href="#enterprise"><span>04</span> 企业内容</a>
+      </nav>
+      <article class="project" id="brand">
         <div class="project-copy">
           <p class="eyebrow">01 / 品牌内容运营</p>
           <h3>把「超慢跑」<br>做成日常内容</h3>
@@ -44,7 +51,7 @@
           <figcaption><span>品牌账号与店铺</span><a href="images/work-1.jpg" target="_blank" rel="noopener">查看原图 ↗</a></figcaption>
         </figure>
       </article>
-      <article class="project">
+      <article class="project" id="campaign">
         <div class="project-copy">
           <p class="eyebrow">02 / 活动策划</p>
           <h3>从内容种草，<br>到新客下单</h3>
@@ -58,7 +65,7 @@
           <figcaption><span>品牌内容主页</span><a href="images/work-3.jpg" target="_blank" rel="noopener">查看原图 ↗</a></figcaption>
         </figure>
       </article>
-      <article class="project">
+      <article class="project" id="video">
         <div class="project-copy">
           <p class="eyebrow">03 / 短视频编导</p>
           <h3>不同的账号，<br>不同的表达方式</h3>
@@ -71,7 +78,7 @@
           <figure class="project-figure"><a class="image-link" href="images/work-2.png" target="_blank" rel="noopener" aria-label="查看汽车招商内容原图（新标签页）"><img src="images/work-2.png" width="1434" height="798" alt="汽车招商短视频内容与评论区咨询截图" loading="lazy" decoding="async"></a><figcaption><span>汽车招商内容与评论反馈</span><a href="images/work-2.png" target="_blank" rel="noopener">查看原图 ↗</a></figcaption></figure>
         </div>
       </article>
-      <article class="project project-text">
+      <article class="project project-text" id="enterprise">
         <div class="project-copy"><p class="eyebrow">04 / 企业内容营销</p><h3>把 AI 产品，<br>放进具体工作里讲</h3></div>
         <div class="project-copy text-case"><p class="project-intro">B 端 AI 场景化内容</p><p>围绕「AI 如何赋能销售」策划系列内容，从销售工作中的具体问题切入，解释产品可以怎么用。</p><dl class="project-details"><div><dt>我的工作</dt><dd>场景选题、脚本撰写，用 AI 辅助生成多个脚本版本，再结合发布反馈调整表达。</dd></div></dl><p class="project-platform">场景选题 / 脚本测试 / 企业客户沟通</p></div>
       </article>
@@ -83,9 +90,26 @@
     <section class="contact wrap" id="contact" aria-labelledby="contact-title">
       <p class="eyebrow">联系</p><h2 id="contact-title">有合适的机会，<br>欢迎聊聊。</h2>
       <a class="email" href="mailto:2369069850@qq.com">2369069850@qq.com <span aria-hidden="true">↗</span></a>
+      <div class="contact-actions">
+        <a class="button button-primary" href="mailto:2369069850@qq.com">发封邮件 <span aria-hidden="true">↗</span></a>
+        <button class="button" type="button" id="copy-email" hidden>复制邮箱 <span aria-hidden="true">⧉</span></button>
+        <a class="button" href="tel:18774722573">电话联系 <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="copy-status" role="status" aria-live="polite"></p>
       <p class="contact-meta">上海 <span aria-hidden="true">/</span> <a href="tel:18774722573">187 7472 2573</a></p>
     </section>
   </main>
   <footer class="site-footer wrap"><span>杨戴霖 · 个人作品集</span><a href="#home">回到顶部 ↑</a></footer>
+  <dialog class="image-viewer" aria-labelledby="viewer-title">
+    <div class="viewer-toolbar">
+      <p id="viewer-title">作品图片</p>
+      <button type="button" class="viewer-close button" aria-label="关闭图片查看器">关闭 <span aria-hidden="true">×</span></button>
+    </div>
+    <div class="viewer-stage" tabindex="0" aria-label="图片区域，放大后可滚动查看"><img alt=""></div>
+    <div class="viewer-footer">
+      <div class="viewer-pagination"><button class="button" type="button" id="viewer-prev" aria-label="上一张图片">←</button><span id="viewer-count" aria-live="polite"></span><button class="button" type="button" id="viewer-next" aria-label="下一张图片">→</button></div>
+      <div class="viewer-actions"><button class="button" id="viewer-zoom" type="button" aria-pressed="false">放大</button><a class="button" id="viewer-original" target="_blank" rel="noopener">原图 ↗</a></div>
+    </div>
+  </dialog>
 </body>
 </html>
