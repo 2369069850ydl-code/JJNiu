@@ -93,6 +93,29 @@ dd { margin: 0; font-size: 14px; color: var(--muted); }
   .email span { margin-left: 10px; }
   .site-footer { font-size: 11px; }
 }
+.value-section { padding-bottom: 64px; }
+.value-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; padding-top: 34px; }
+.value-grid h3, .method-steps h3 { font-size: 21px; margin-bottom: 14px; }
+.value-grid p:not(.eyebrow), .method-steps p { color: var(--muted); font-size: 14px; }
+.value-grid .eyebrow { margin-bottom: 14px; }
+.method-section { padding-top: 64px; }
+.method-intro { max-width: 720px; margin-top: 28px; color: var(--muted); }
+.agent-case { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; padding-block: 36px; }
+.agent-case .eyebrow { margin-bottom: 16px; }
+.agent-summary { font-size: 16px; color: var(--muted); margin-top: 18px; max-width: 420px; }
+.agent-case .project-details { margin-top: 0; }
+.agent-case .project-details > div:first-child { margin-top: 0; }
+.method-steps { list-style: none; padding: 0; margin: 32px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 60px; }
+.method-steps li { border-left: 2px solid var(--line); padding-left: 22px; }
+.method-steps .eyebrow { display: block; margin-bottom: 12px; }
+.method-note { padding: 20px 0; border-block: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 680px) {
+  .value-grid, .method-steps, .agent-case { grid-template-columns: 1fr; gap: 28px; }
+  .value-section { padding-bottom: 42px; }
+  .method-section { padding-top: 42px; }
+  .method-section .section-heading { gap: 16px; }
+  .method-section .section-heading > span { flex-shrink: 0; }
+}
 button { font: inherit; cursor: pointer; }
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 [hidden] { display: none !important; }
