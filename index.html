@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#171816">
   <title>杨戴霖 · 个人作品集</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="design.css">
   <script src="interactions.js" defer></script>
 </head>
 <body>
@@ -22,7 +23,7 @@
         <h1 id="hero-title">我是杨戴霖</h1>
         <p class="intro"><span>从零搭建内容账号</span><span>用 AI 解决实际业务问题</span></p>
         <p class="hero-note">能接手一个还没起步的内容项目，从定位、选题到拍摄、发布和复盘推进落地。也搭建了爆款图文 Agent：导入参考内容，自动生图，并获取流量数据与讨论内容。</p>
-        <p class="hero-note">代表作品：“超慢跑跟练”笔记获赞 6.3 万。<a href="images/work-3.jpg" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:4px">查看截图</a></p>
+        <a class="featured-result" href="images/work-3.jpg" target="_blank" rel="noopener"><span class="result-number">6.3<span>万</span></span><span class="result-description">单篇笔记获赞<strong>超慢跑跟练</strong></span><span class="result-action">查看作品</span></a>
         <a class="text-link" href="#projects">看我做过的项目 </a>
       </div>
       <figure class="portrait">
@@ -95,9 +96,16 @@
     </section>
     <section class="method-section wrap" id="ai-method" aria-labelledby="method-title">
       <div class="section-heading"><h2 id="method-title">AI 工作流与 Agent 搭建</h2><span>工作方法</span></div>
+      <div class="agent-showcase">
       <div class="agent-case">
         <div><p class="eyebrow">自主搭建的内容生产工具</p><h3>爆款图文 Agent</h3><p class="agent-summary">把参考内容、图片生成和数据反馈，接到同一套工作流程里。</p></div>
         <div><dl class="project-details"><div><dt>输入</dt><dd>导入爆款图文作为内容参考。</dd></div><div><dt>执行</dt><dd>自动生成图片，减少手工逐张制作的重复步骤。</dd></div><div><dt>反馈</dt><dd>获取流量数据与讨论内容，为后续选题和内容调整提供依据。</dd></div></dl></div>
+      </div>
+      <ol class="agent-flow" aria-label="爆款图文 Agent 工作流程">
+        <li><span class="flow-number">01</span><div><strong>导入参考</strong><p>爆款图文内容</p></div></li>
+        <li><span class="flow-number">02</span><div><strong>自动生图</strong><p>生成图文图片</p></div></li>
+        <li><span class="flow-number">03</span><div><strong>获取反馈</strong><p>流量数据与讨论</p></div></li>
+      </ol>
       </div>
       <p class="method-note">对企业的价值：让运营从参考内容更快推进到图片制作，并把流量和用户讨论用于复盘。工具负责执行，人负责判断选题、审核内容和决定怎么改。</p>
       <p class="method-intro">我的 AI 方法：先明确业务任务，再把步骤拆开，最后用真实输出检验。搭建 Agent 时，我会按下面四步推进：</p>
