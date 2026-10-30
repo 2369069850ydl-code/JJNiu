@@ -150,3 +150,46 @@
  filters.forEach(button=>button.addEventListener('click',()=>filter(button.dataset.filter)));
  if(filters.length)filter(new URLSearchParams(location.search).get('focus')||'all');
 })();
+
+// Project layers retain native case links when JavaScript is unavailable.
+(() => {
+ const tabs=[...document.querySelectorAll('[data-project]')],panels=[...document.querySelectorAll('[data-project-panel]')];
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ if(tabs.length){
+  const nav=document.querySelector('.v-project-nav');nav.setAttribute('role','tablist');
+  function orientation(){nav.setAttribute('aria-orientation',innerWidth<=780?'horizontal':'vertical');}
+  orientation();window.addEventListener('resize',orientation,{passive:true});
+  tabs.forEach(t=>t.setAttribute('role','tab'));panels.forEach(p=>{p.setAttribute('role','tabpanel');p.tabIndex=0;});
+  function choose(name,animate=false,focus=false){
+   if(!tabs.some(t=>t.dataset.project===name))name='health';
+   tabs.forEach(t=>{const active=t.dataset.project===name;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;if(active&&focus){t.focus();t.scrollIntoView({block:'nearest',inline:'nearest'});}});
+   panels.forEach(p=>{if(window.gsap)gsap.killTweensOf(p);p.hidden=p.dataset.projectPanel!==name;p.style.opacity='';p.style.transform='';});
+   const panel=panels.find(p=>p.dataset.projectPanel===name);
+   if(animate&&window.gsap&&!reduce.matches)gsap.fromTo(panel,{y:13},{y:0,duration:.38,ease:'power2.out',clearProps:'transform'});
+  }
+  tabs.forEach((t,i)=>{
+   t.addEventListener('click',e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||e.button!==0)return;e.preventDefault();choose(t.dataset.project,true);});
+   t.addEventListener('keydown',e=>{let n=i;if(['ArrowRight','ArrowDown'].includes(e.key))n=(i+1)%tabs.length;else if(['ArrowLeft','ArrowUp'].includes(e.key))n=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();choose(tabs[n].dataset.project,true,true);});
+  });
+  choose(new URLSearchParams(location.search).get('focus')||'health');
+ }
+ // Original lightweight particle background, paused when the page is hidden.
+ const canvas=document.querySelector('#particle-canvas');if(!canvas)return;
+ const ctx=canvas.getContext('2d');if(!ctx)return;
+ let width=0,height=0,points=[],frame;
+ function size(){
+  width=innerWidth;height=innerHeight;const dpr=Math.min(devicePixelRatio||1,1.5);
+  canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  points=Array.from({length:Math.min(42,Math.max(18,Math.floor(width/38)))},()=>({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.08,vy:(Math.random()-.5)*.08,r:Math.random()*.85+.25,o:Math.random()*.32+.12}));
+ }
+ function draw(){
+  ctx.clearRect(0,0,width,height);
+  points.forEach(p=>{if(!reduce.matches){p.x=(p.x+p.vx+width)%width;p.y=(p.y+p.vy+height)%height;}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(161,194,255,'+p.o+')';ctx.fill();});
+  if(!reduce.matches&&!document.hidden)frame=requestAnimationFrame(draw);
+ }
+ function restart(){cancelAnimationFrame(frame);draw();}
+ size();restart();window.addEventListener('resize',()=>{size();restart();},{passive:true});
+ document.addEventListener('visibilitychange',restart);reduce.addEventListener('change',restart);
+ const backdrop=document.querySelector('.space-backdrop');
+ if(backdrop&&matchMedia('(pointer:fine)').matches)window.addEventListener('pointermove',event=>{if(reduce.matches||!window.gsap)return;gsap.to(backdrop,{x:(event.clientX/innerWidth-.5)*5,y:(event.clientY/innerHeight-.5)*3,duration:1,ease:'power2.out'});},{passive:true});
+})();
