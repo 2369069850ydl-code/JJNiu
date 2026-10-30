@@ -115,3 +115,38 @@
     updateCurrent();
   }
 })();
+
+(() => {
+ document.body.classList.add('enhanced');
+ const tabs=[...document.querySelectorAll('[data-showcase]')];
+ const panels=[...document.querySelectorAll('.showcase-panel')];
+ function select(tab,focus=false){
+  tabs.forEach(t=>{const active=t===tab;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});
+  panels.forEach(p=>{p.hidden=p.id!==tab.getAttribute('aria-controls');});
+  if(focus)tab.focus();
+ }
+ tabs.forEach((tab,i)=>{
+  tab.addEventListener('click',()=>select(tab));
+  tab.addEventListener('keydown',event=>{
+   let index=i;
+   if(event.key==='ArrowRight')index=(i+1)%tabs.length;
+   else if(event.key==='ArrowLeft')index=(i+tabs.length-1)%tabs.length;
+   else if(event.key==='Home')index=0;
+   else if(event.key==='End')index=tabs.length-1;
+   else return;
+   event.preventDefault();select(tabs[index],true);
+  });
+ });
+ if(tabs.length)select(tabs[0]);
+ const filters=[...document.querySelectorAll('[data-filter]')];
+ const cards=[...document.querySelectorAll('.work-card')];
+ const status=document.querySelector('#filter-status');
+ function filter(value){
+  const valid=filters.some(b=>b.dataset.filter===value)?value:'all';
+  filters.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===valid)));
+  let count=0;cards.forEach(card=>{card.hidden=valid!=='all'&&card.dataset.category!==valid;if(!card.hidden)count++;});
+  if(status)status.textContent=count+'个精选项目';
+ }
+ filters.forEach(button=>button.addEventListener('click',()=>filter(button.dataset.filter)));
+ if(filters.length)filter(new URLSearchParams(location.search).get('focus')||'all');
+})();
