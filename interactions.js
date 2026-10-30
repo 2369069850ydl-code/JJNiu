@@ -169,7 +169,7 @@
   }
   tabs.forEach((t,i)=>{
    t.addEventListener('click',e=>{if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||e.button!==0)return;e.preventDefault();choose(t.dataset.project,true);});
-   t.addEventListener('keydown',e=>{let n=i;if(['ArrowRight','ArrowDown'].includes(e.key))n=(i+1)%tabs.length;else if(['ArrowLeft','ArrowUp'].includes(e.key))n=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();choose(tabs[n].dataset.project,true,true);});
+   t.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();choose(t.dataset.project,true);return;}let n=i;if(['ArrowRight','ArrowDown'].includes(e.key))n=(i+1)%tabs.length;else if(['ArrowLeft','ArrowUp'].includes(e.key))n=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=tabs.length-1;else return;e.preventDefault();choose(tabs[n].dataset.project,true,true);});
   });
   choose(new URLSearchParams(location.search).get('focus')||'health');
  }
