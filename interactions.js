@@ -22,7 +22,7 @@
       image.src = links[index].href;
       image.alt = source.alt;
       document.querySelector('#viewer-title').textContent = links[index].closest('figure').querySelector('figcaption span').textContent;
-      document.querySelector('#viewer-count').textContent = (index + 1) + ' / ' + links.length;
+      document.querySelector('#viewer-count').textContent = '第 ' + (index + 1) + ' 张，共 ' + links.length + ' 张';
       document.querySelector('#viewer-original').href = links[index].href;
     }
     links.forEach((link, i) => {
@@ -39,13 +39,20 @@
         viewer.querySelector('.viewer-close').focus();
       });
     });
-    viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
-    viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
-    viewer.addEventListener('close', () => {
+    function restorePage() {
+      if (viewer.open) return;
       document.body.style.overflow = previousOverflow;
       resetZoom();
       if (trigger) trigger.focus({ preventScroll: true });
-    });
+    }
+    function closeViewer() {
+      viewer.close();
+      restorePage();
+    }
+    viewer.querySelector('.viewer-close').addEventListener('click', closeViewer);
+    viewer.addEventListener('click', event => { if (event.target === viewer) closeViewer(); });
+    viewer.addEventListener('cancel', event => { event.preventDefault(); closeViewer(); });
+    viewer.addEventListener('close', restorePage);
     document.querySelector('#viewer-prev').addEventListener('click', () => showImage(index - 1));
     document.querySelector('#viewer-next').addEventListener('click', () => showImage(index + 1));
     zoom.addEventListener('click', () => {
